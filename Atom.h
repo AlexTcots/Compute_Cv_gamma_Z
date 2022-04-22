@@ -8,7 +8,7 @@
 #include "Spectro_Atom.h"
 #include "Particle.h"
 #include "Constants.h"
-
+#include <cmath>
 class Atom : protected Particle {
 private:
     double mass;

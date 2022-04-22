@@ -11,7 +11,7 @@ Atom::Atom(double m, const Spectro_Atom &atom_data) : Particle(),
 }
 
 void Atom::Compute_Ztrans(const double& Temp) {
-    double ztrans = pow(2 * Pi * mass * BOLTZ * Temp / (h_plc * h_plc), 3 / 2);
+    double ztrans = pow(2 * Pi * mass * BOLTZ * Temp / (h_plc * h_plc), 3.0 / 2);
     Set_Z_trans(ztrans);
 
 }
