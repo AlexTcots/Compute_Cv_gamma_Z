@@ -20,24 +20,28 @@ protected:
 
     void Set_eint(double input);
 
+    void Set_Cv_trans(double input);
+
+    void Set_Cv_int(double input);
+
 public:
     Particle();
 
-    virtual void Compute_Ztrans(double Temp) = 0;
+    virtual void Compute_Ztrans(const double &Temp) = 0;
 
-    virtual void Compute_Zint(double Temp) = 0;
+    virtual void Compute_Zint(const double &Temp) = 0;
 
     void Compute_Ztotal();
 
-    virtual void Compute_etrans(double Temp) = 0;
+    virtual void Compute_etrans(const double &Temp) = 0;
 
-    virtual void Compute_eint(double Temp) = 0;
+    virtual void Compute_eint(const double &Temp) = 0;
 
     void Compute_etotal();
 
-    virtual void Compute_Cv_trans(double Temp) = 0;
+    virtual void Compute_Cv_trans(const double &Temp) = 0;
 
-    virtual void Compute_Cv_int(double Temp) = 0;
+    virtual void Compute_Cv_int(const double &Temp) = 0;
 
     void Compute_Cv_total();
 

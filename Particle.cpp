@@ -45,6 +45,16 @@ void Particle::Set_eint(double input) {
 
 }
 
+void Particle::Set_Cv_trans(double input) {
+    Cv_trans = input;
+
+}
+
+void Particle::Set_Cv_int(double input) {
+    Cv_int = input;
+
+}
+
 const double &Particle::Get_Ztrans() const {
     return Z_trans;
 }
@@ -80,5 +90,9 @@ const double &Particle::Get_Cv_int() const {
 const double &Particle::Get_Cv_total() const {
     return Cv_total;
 }
+
+
+
+
 
 
