@@ -36,3 +36,22 @@ void Test_Atom() {
 
 
 }
+
+void Test_Molecule() {
+    double temp = 300;
+    Spectro_molecule O2_data(5,"O2.txt");
+    Molecule O2(m_O2,O2_data);
+    O2.Compute_Z_e_cv(temp);
+
+    cout << "Z_trans = " << O2.Get_Ztrans() << ' '
+         << "Z_int   = " << O2.Get_Zint() << ' '
+         << "Z_total = " << O2.Get_Ztotal() << '\n'
+
+         << "e_trans = " << O2.Get_etrans() << ' '
+         << "e_int   = " << O2.Get_eint() << ' '
+         << "e_total = " << O2.Get_etotal() << '\n'
+
+         << "Cv_trans = " << O2.Get_Cv_trans() << ' '
+         << "Cv_int   = " << O2.Get_Cv_int() << ' '
+         << "Cv_total = " << O2.Get_Cv_total() << '\n';
+}

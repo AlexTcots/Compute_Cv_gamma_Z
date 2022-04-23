@@ -24,6 +24,10 @@ public:
 
     double Compute_en_rot(int n_elev, int i_vib, int j_rot);
 
+    double Compute_e_nij(int n_elev, int i_vib, int j_rot);
+
+    double Compute_e_diss(int n_elev);
+
     bool LessEdiss(int n_elev,int i_vib,int j_rot);
 
     void Compute_Ztrans(const double &Temp) override;
