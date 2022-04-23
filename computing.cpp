@@ -10,7 +10,7 @@ void Computing_data(string input_filename,int size_vec,const double& temp1,const
     Molecule O2(m_O2, O2_data);
 
     ofstream output(output_name, ios::trunc | ios::out);
-    output << "Z_trans  "  << ' '
+    output <<"Temp"<<' '<< "Z_trans  "  << ' '
            << "Z_int    "  << ' '
            << "Z_total  "  << ' '
 

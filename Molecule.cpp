@@ -22,14 +22,14 @@ double Molecule::Compute_en_vib(int n_elev, int i_vib) {
 double Molecule::Compute_en_rot(int n_elev, int i_vib, int j_rot) {
     double B_ne =  100*Molecule_data.Get_data_at(n_elev).Be;
     double alpha_ne = Molecule_data.Get_data_at(n_elev).alpha_e;
-    //double D_ne = Molecule_data.Get_data_at(n_elev).De;
-    //double beta_ne = Molecule_data.Get_data_at(n_elev).beta_e;
+    double D_ne = 1e-4*Molecule_data.Get_data_at(n_elev).De;
+    double beta_ne = Molecule_data.Get_data_at(n_elev).beta_e;
 
     double B_ni = B_ne - alpha_ne * (i_vib + 0.5);
-    //double D_ni = D_ne - beta_ne * (i_vib + 0.5);
+    double D_ni = D_ne - beta_ne * (i_vib + 0.5);
 
-    //return (B_ni * j_rot * (j_rot + 1) - D_ni * pow(j_rot, 2.0) * pow(j_rot + 1, 2.0))*h_plc*c_light;
-    return B_ni * j_rot * (j_rot + 1)* h_plc * c_light;
+    return (B_ni * j_rot * (j_rot + 1) - D_ni * pow(j_rot, 2.0) * pow(j_rot + 1, 2.0))*h_plc*c_light;
+    //return B_ni * j_rot * (j_rot + 1)* h_plc * c_light;
 }
 
 double Molecule::Compute_e_nij(int n_elev, int i_vib, int j_rot) {
@@ -38,7 +38,13 @@ double Molecule::Compute_e_nij(int n_elev, int i_vib, int j_rot) {
 }
 
 double Molecule::Compute_e_diss(int n_elev) {
-    double e_diss = Molecule_data.Get_data_at(n_elev).Te + fabs(Molecule_data.Get_data_at(n_elev).E_diss);
+    double e_diss =0 ;
+    double e_E_diss = Molecule_data.Get_data_at(n_elev).E_diss;
+    if(e_E_diss>0){
+       e_diss=e_E_diss;
+    }else{
+        e_diss = Molecule_data.Get_data_at(n_elev).Te-e_E_diss;
+    }
 
     return e_diss * 100 * h_plc * c_light;
 }
@@ -128,6 +134,9 @@ void Molecule::Compute_eint(const double &Temp) {
     double sum_n = 0;
     double e_nij = 0;
     double e_dissn = 0;
+    double erot=0;
+    double evib=0;
+    double eele=0;
     int i_vib = 0;
     int j_rot = 0;
     double beta = -1 * BOLTZ * Temp;
@@ -135,16 +144,18 @@ void Molecule::Compute_eint(const double &Temp) {
     for (int n_elevl = 0; n_elevl < nmax; ++n_elevl) {
         e_dissn = Compute_e_diss(n_elevl);
         e_nij = Compute_e_nij(n_elevl, i_vib, j_rot);
-        while (e_nij < e_dissn) {// loop for vib
-            while (e_nij < e_dissn) { // loop for rot
-                double erot = Compute_en_rot(n_elevl, i_vib, j_rot);
+        while (e_nij < e_dissn) {
+            // loop for vib
+            while (e_nij < e_dissn) {
+                // loop for rot
+                erot = Compute_en_rot(n_elevl, i_vib, j_rot);
                 sum_j += (2 * j_rot + 1) * erot * exp(erot / beta);
                 j_rot++;
                //std::cout << " n i j " << n_elevl << ' ' << i_vib << ' ' << j_rot <<' '
                //<<"sum_j = "<< sum_j<<' '<<" sum_i = "<< sum_i<<" sum_n = "<< sum_n<< '\n';
                 e_nij = Compute_e_nij(n_elevl, i_vib, j_rot);
             }
-            double evib = Compute_en_vib(n_elevl, i_vib);
+            evib = Compute_en_vib(n_elevl, i_vib);
             sum_i += evib * exp(evib / beta) * sum_j;
 
             sum_j = 0;
@@ -152,7 +163,7 @@ void Molecule::Compute_eint(const double &Temp) {
             j_rot = 0;
             e_nij = Compute_e_nij(n_elevl, i_vib, j_rot);
         }
-        double eele = Compute_en_ele(n_elevl);
+         eele = Compute_en_ele(n_elevl);
         sum_n += Molecule_data.Get_data_at(n_elevl).gn * eele * exp(eele / beta) * sum_i;
 
         sum_i = 0;
@@ -208,9 +219,9 @@ void Molecule::Compute_Cv_int(const double &Temp) {
             e_nij = Compute_e_nij(n_elevl, i_vib, j_rot);
         }
         double eele = Compute_en_ele(n_elevl);
-        sum_nl += pow(eele / (BOLTZ * Temp), 2.0) * Molecule_data.Get_data_at(n_elevl).gn * eele *
+        sum_nl += pow(eele / (BOLTZ * Temp), 2.0) * Molecule_data.Get_data_at(n_elevl).gn  *
                   exp(eele / beta) * sum_il;
-        sum_nr += (eele / (BOLTZ * Temp)) * Molecule_data.Get_data_at(n_elevl).gn * eele *
+        sum_nr += (eele / (BOLTZ * Temp)) * Molecule_data.Get_data_at(n_elevl).gn *
                   exp(eele / beta) * sum_ir;
         sum_il = 0;
         sum_ir = 0;

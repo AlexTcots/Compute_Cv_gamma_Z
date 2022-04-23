@@ -10,6 +10,6 @@ int main() {
 
 //Test_Atom();
 //Test_Molecule();
-    Computing_data("O2.txt",200,300,100,"outdata.txt");
+    Computing_data("O2.txt",500,50,100,"outdata.txt");
 
 }
